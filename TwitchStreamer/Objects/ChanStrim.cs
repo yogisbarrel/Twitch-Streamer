@@ -1,11 +1,6 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using Windows.UI.Xaml.Media;
+﻿using Windows.UI.Xaml.Media;
 
-namespace TwitchStreamer.Views
+namespace TwitchStreamer.Objects
 {
     public class ChanStrim
     {
@@ -14,7 +9,4 @@ namespace TwitchStreamer.Views
         public ImageSource preview { get; set; }
         public int viewers { get; set; }
     }
-
-
-    
 }

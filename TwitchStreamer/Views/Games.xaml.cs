@@ -1,43 +1,44 @@
-﻿using System;
+﻿using Newtonsoft.Json;
+using System;
 using System.Collections.Generic;
+using System.Linq;
+using System.Threading.Tasks;
+using TwitchStreamer.Objects;
+using TwitchStreamer.Objects.Game;
 using Windows.UI.Xaml;
 using Windows.UI.Xaml.Controls;
 using Windows.UI.Xaml.Media;
-using Windows.UI.Xaml.Navigation;
-using System.Threading.Tasks;
-using TwitchStreamers.Views;
 using Windows.UI.Xaml.Media.Imaging;
+using Windows.UI.Xaml.Navigation;
 using Windows.Web.Http;
-using Newtonsoft.Json;
-using TwitchStreamer;
-using System.Linq;
 
 namespace TwitchStreamer.Views
 {
     /// <summary>
-    /// An empty page that can be used on its own or navigated to within a Frame.
+    /// The page that displays the current trending games as tiles
+    /// live from twitch.tv
     /// </summary>
     public sealed partial class Games : Page
     {
+        static Uri api = new Uri("https://api.twitch.tv/kraken/games/top?limit=50");
+
         private List<GameSection> gridList = new List<GameSection>();
-        //public static AppShell Current = null;
-        public string game;
-        Uri api = new Uri("https://api.twitch.tv/kraken/games/top?limit=50");
-        private GamesInfo.RootObject deser;
-        private List<ChanStrim> chanLs = new List<ChanStrim>();
+        private Objects.Game.RootObject GamesInfo;
+
+        /// <summary>
+        /// Initializes a new instance of the <see cref="Games"/> class.
+        /// </summary>
         public Games()
         {
-            //parseGames();
-            //parseGames()
-            this.InitializeComponent();      
-
-            
+            this.InitializeComponent();
         }
+
+        /// <summary>
+        /// Games the tiles.
+        /// </summary>
         private void gameTiles()
         {
-            
-           
-            var f = deser.top.Select(item => new GameSection()
+            var f = GamesInfo.top.Select(item => new GameSection()
             {
                 game = item.game.name,
                 viewers = item.viewers,
@@ -45,20 +46,13 @@ namespace TwitchStreamer.Views
             }).ToList();
             gridList.AddRange(f);
             gameView.ItemsSource = gridList;
-           
         }
-        //private async Task parseGames()
-        //{
-        //    //temp = new GamesInfo();
-        //    //pooser = await temp.RunAsync();
-        //    //var f = gameTiles();
-            
-        //    Action glist = () => gameTiles();
-        //    await Task.Run(glist);           
-            
-        //}
 
-        async public Task<GamesInfo.RootObject> GetAsync()
+        /// <summary>
+        /// Gets the asynchronous.
+        /// </summary>
+        /// <returns></returns>
+        async public Task<Objects.Game.RootObject> GetAsync()
         {
             string test;
             using (var httpClient = new HttpClient())
@@ -68,56 +62,73 @@ namespace TwitchStreamer.Views
                 test = await response.Content.ReadAsStringAsync();
             }
 
-            deser = JsonConvert.DeserializeObject<GamesInfo.RootObject>(test);
+            GamesInfo = JsonConvert.DeserializeObject<Objects.Game.RootObject>(test);
 
-
-            return deser;
+            return GamesInfo;
         }
 
+        /// <summary>
+        /// Converts the specified link.
+        /// </summary>
+        /// <param name="link">The link.</param>
+        /// <returns></returns>
         private ImageBrush convert(string link)
         {
             try
             {
-
                 ImageBrush img = new ImageBrush();
                 var source = new BitmapImage();
                 source.UriSource = new Uri(link);
                 img.ImageSource = source;
 
                 return img;
-                //return img;
             }
             catch (NullReferenceException)
             {
-                //MessageBox.Show(e.Message);
                 return null;
             }
         }
 
+        /// <summary>
+        /// Page_s the loading.
+        /// </summary>
+        /// <param name="sender">The sender.</param>
+        /// <param name="args">The arguments.</param>
         private async void Page_Loading(FrameworkElement sender, object args)
         {
-            deser = await GetAsync();
+            GamesInfo = await GetAsync();
             gameTiles();
-            
-            //gameView.UpdateLayout();
         }
 
+        /// <summary>
+        /// Handles the ItemClick event of the gameView control.
+        /// </summary>
+        /// <param name="sender">The source of the event.</param>
+        /// <param name="e">The <see cref="ItemClickEventArgs"/> instance containing the event data.</param>
         private void gameView_ItemClick(object sender, ItemClickEventArgs e)
         {
             var item = (GameSection)e.ClickedItem;
             AppShell.Current.AppFrame.Navigate(typeof(Channels), item.game);
-            
         }
 
+        /// <summary>
+        /// Raises the <see cref="E:NavigatedTo" /> event.
+        /// </summary>
+        /// <param name="e">The <see cref="NavigationEventArgs"/> instance containing the event data.</param>
         protected override void OnNavigatedTo(NavigationEventArgs e)
         {
             base.OnNavigatedTo(e);
             if (e.NavigationMode == NavigationMode.Back)
             {
-                
             }
             gameView.IsEnabled = true;
         }
+
+        /// <summary>
+        /// Called when [navigating to page].
+        /// </summary>
+        /// <param name="sender">The sender.</param>
+        /// <param name="e">The <see cref="NavigatingCancelEventArgs"/> instance containing the event data.</param>
         private void OnNavigatingToPage(object sender, NavigatingCancelEventArgs e)
         {
             if (e.NavigationMode == NavigationMode.Back)
@@ -125,7 +136,6 @@ namespace TwitchStreamer.Views
                 var item = (from p in AppShell.Current.navlist where p.DestinationPage == e.SourcePageType select p).SingleOrDefault();
                 if (item == null && AppShell.Current.AppFrame.BackStackDepth > 0)
                 {
-                    
                     foreach (var entry in AppShell.Current.AppFrame.BackStack.Reverse())
                     {
                         item = (from p in AppShell.Current.navlist where p.DestinationPage == entry.SourcePageType select p).SingleOrDefault();
@@ -136,22 +146,20 @@ namespace TwitchStreamer.Views
 
                 var container = (ListViewItem)AppShell.Current.NavMenuList.ContainerFromItem(item);
 
-                
                 if (container != null) container.IsTabStop = false;
                 AppShell.Current.NavMenuList.SetSelectedItem(container);
                 if (container != null) container.IsTabStop = true;
             }
         }
+
+        /// <summary>
+        /// Raises the <see cref="E:NavigatedFrom" /> event.
+        /// </summary>
+        /// <param name="e">The <see cref="NavigationEventArgs"/> instance containing the event data.</param>
         protected override void OnNavigatedFrom(NavigationEventArgs e)
         {
             base.OnNavigatedFrom(e);
-            //this.GamePage.Frame.Dispatcher.
             gameView.IsEnabled = false;
-        }
-
-        private void Page_Loaded(object sender, RoutedEventArgs e)
-        {
-
         }
     }
 }

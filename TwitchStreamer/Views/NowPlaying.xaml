@@ -4,28 +4,18 @@
     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
     xmlns:local="using:TwitchStreamer.Views"
     xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
-    xmlns:f="using:TwitchStreamer.Views"
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
     x:Class="TwitchStreamer.Views.NowPlaying"
     mc:Ignorable="d">
 
     <Page.Transitions>
         <TransitionCollection>
-            <EntranceThemeTransition/>
+            <EntranceThemeTransition />
         </TransitionCollection>
     </Page.Transitions>
     <Grid Background="{ThemeResource ApplicationPageBackgroundThemeBrush}"
-		EntranceNavigationTransitionInfo.IsTargetElement="True">
-        <MediaElement x:Name="mediaElement" HorizontalAlignment="Left" Height="1080" VerticalAlignment="Top" Width="1920" AudioCategory="Media" RealTimePlayback="True"/>
-
-
-        <WebView x:Name="sView" NavigationCompleted="sView_NavigationCompleted" NavigationStarting="sView_NavigationStarting" ScrollViewer.VerticalScrollBarVisibility="Disabled" Margin="0,0,353,68"/>
-        <!--<WebView x:Name="chatView" Source="local:chat" Margin="1572,0,0,68" RenderTransformOrigin="0.5,0.5">-->
-
-        <!--<ToggleButton x:Name="chatButton" Content="ToggleButton" HorizontalAlignment="Left" VerticalAlignment="Top" Margin="1518,1017,0,0" Height="53" Click="toggleButton_Click">
-            <ToggleButton.Background>
-                <ImageBrush Stretch="Fill"/>
-            </ToggleButton.Background>
-        </ToggleButton>-->
+		EntranceNavigationTransitionInfo.IsTargetElement="True" RequestedTheme="Dark" Width="Auto" Height="Auto">
+        
+        <WebView x:Name="strimView" ScrollViewer.VerticalScrollBarVisibility="Disabled" ManipulationMode="All" />
     </Grid>
 </Page>

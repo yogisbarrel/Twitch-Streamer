@@ -2,33 +2,30 @@
     x:Name="GamePage"
     xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
-    xmlns:local="using:TwitchStreamer.Views"
+    xmlns:local="using:TwitchStreamer.Objects"
     xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
     x:Class="TwitchStreamer.Views.Games"
-    mc:Ignorable="d"  RequestedTheme="{StaticResource AppDefault}" Loaded="Page_Loaded">
-
-
-
+    mc:Ignorable="d"  RequestedTheme="{StaticResource AppDefault}">
 
     <Grid Background="{ThemeResource ApplicationPageBackgroundThemeBrush}"
 		EntranceNavigationTransitionInfo.IsTargetElement="True">
-        <GridView 
-			x:Name="gameView" 
-			Width="Auto" 
+        <GridView
+			x:Name="gameView"
+			Width="Auto"
 			Height="Auto"
 			IsItemClickEnabled="True"
-			SelectionMode="None" ItemClick="gameView_ItemClick" Loading="Page_Loading">
+			SelectionMode="None" ItemClick="gameView_ItemClick">
             <GridView.ItemTemplate>
                 <DataTemplate x:DataType="local:GameSection">
                     <Grid HorizontalAlignment="Stretch">
                         <Border Background="{ThemeResource ListViewItemPlaceholderBackgroundThemeBrush}">
-                            <Image Source="{x:Bind gameImage}" Stretch="None"/>
+                            <Image Source="{x:Bind gameImage}" Stretch="None" />
                         </Border>
                         <StackPanel VerticalAlignment="Bottom" Background="{ThemeResource ListViewItemOverlayBackgroundThemeBrush}">
-                            <TextBlock x:Name="gameText" Text="{x:Bind game}" Foreground="{ThemeResource ListViewItemOverlayForegroundThemeBrush}" Style="{StaticResource TitleTextBlockStyle}" Height="60" Margin="15,0,15,0"/>
-                            <TextBlock Text="{x:Bind viewers}" Foreground="{ThemeResource ListViewItemOverlaySecondaryForegroundThemeBrush}" Style="{StaticResource CaptionTextBlockStyle}" TextWrapping="NoWrap" Margin="15,0,15,0"/>
-                            <TextBlock Text="viewers" Foreground="{ThemeResource ListViewItemOverlaySecondaryForegroundThemeBrush}" Style="{StaticResource CaptionTextBlockStyle}" TextWrapping="NoWrap" Margin="15,0,15,0"/>
+                            <TextBlock x:Name="gameText" Text="{x:Bind game}" Foreground="{ThemeResource ListViewItemOverlayForegroundThemeBrush}" Style="{StaticResource TitleTextBlockStyle}" Height="60" Margin="15,0,15,0" />
+                            <TextBlock Text="{x:Bind viewers}" Foreground="{ThemeResource ListViewItemOverlaySecondaryForegroundThemeBrush}" Style="{StaticResource CaptionTextBlockStyle}" TextWrapping="NoWrap" Margin="15,0,15,0" />
+                            <TextBlock Text="viewers" Foreground="{ThemeResource ListViewItemOverlaySecondaryForegroundThemeBrush}" Style="{StaticResource CaptionTextBlockStyle}" TextWrapping="NoWrap" Margin="15,0,15,0" />
                         </StackPanel>
                     </Grid>
                 </DataTemplate>

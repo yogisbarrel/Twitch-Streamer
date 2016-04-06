@@ -9,11 +9,9 @@
         <ResourceDictionary>
 
             <ResourceDictionary.MergedDictionaries>
-                <ResourceDictionary Source="Styles/Styles.xaml"/>
+                <ResourceDictionary Source="Styles/Styles.xaml" />
             </ResourceDictionary.MergedDictionaries>
             <ElementTheme x:Key="AppDefault">Dark</ElementTheme>
-
         </ResourceDictionary>
     </Application.Resources>
-
 </Application>

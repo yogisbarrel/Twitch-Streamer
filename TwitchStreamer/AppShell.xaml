@@ -12,7 +12,7 @@
       mc:Ignorable="d">
 
     <!-- Using a Page as the root for the app provides a design time experience as well as ensures that
-         when it runs on Mobile the app content won't appear under the system's StatusBar which is visible 
+         when it runs on Mobile the app content won't appear under the system's StatusBar which is visible
          by default with a transparent background.  It will also take into account the presence of software
          navigation buttons if they appear on a device.  An app can opt-out by switching to UseCoreWindow.
     -->
@@ -28,13 +28,13 @@
                      It appears when the user hovers over the icon, but not the label which provides
                      value when the SplitView is 'Compact' while reducing the likelihood of showing
                      redundant information when the label is shown.-->
-                <FontIcon x:Name="Glyph" FontSize="16" Glyph="{x:Bind SymbolAsChar}" VerticalAlignment="Center" HorizontalAlignment="Center" ToolTipService.ToolTip="{x:Bind Label}"/>
+                <FontIcon x:Name="Glyph" FontSize="16" Glyph="{x:Bind SymbolAsChar}" VerticalAlignment="Center" HorizontalAlignment="Center" ToolTipService.ToolTip="{x:Bind Label}" />
                 <TextBlock x:Name="Text" Grid.Column="1" Text="{x:Bind Label}" />
             </Grid>
         </DataTemplate>
     </Page.Resources>
     <Page.RequestedTheme>
-        <StaticResource ResourceKey="AppDefault"/>
+        <StaticResource ResourceKey="AppDefault" />
     </Page.RequestedTheme>
 
     <Grid>
@@ -46,8 +46,8 @@
                         <AdaptiveTrigger MinWindowWidth="720" />
                     </VisualState.StateTriggers>
                     <VisualState.Setters>
-                        <Setter Target="RootSplitView.DisplayMode" Value="CompactOverlay"/>
-                        <Setter Target="RootSplitView.IsPaneOpen" Value="False"/>
+                        <Setter Target="RootSplitView.DisplayMode" Value="CompactOverlay" />
+                        <Setter Target="RootSplitView.IsPaneOpen" Value="False" />
                     </VisualState.Setters>
                 </VisualState>
                 <VisualState>
@@ -55,7 +55,7 @@
                         <AdaptiveTrigger MinWindowWidth="0" />
                     </VisualState.StateTriggers>
                     <VisualState.Setters>
-                        <Setter Target="RootSplitView.DisplayMode" Value="Overlay"/>
+                        <Setter Target="RootSplitView.DisplayMode" Value="Overlay" />
                     </VisualState.Setters>
                 </VisualState>
             </VisualStateGroup>
@@ -84,16 +84,16 @@
                                 IsEnabled="{Binding AppFrame.CanGoBack, ElementName=Root}"
                                 Width="{Binding ItemsPanelRoot.Width, ElementName=NavMenuList}"
                                 HorizontalAlignment="{Binding ItemsPanelRoot.HorizontalAlignment, ElementName=NavMenuList}"
-                                Click="BackButton_Click"/>
+                                Click="BackButton_Click" />
                     </controls:NavMenuListView.Header>
                     <controls:NavMenuListView.Footer>
-                        <Button x:Name="SettingsButton" 
+                        <Button x:Name="SettingsButton"
                                 ToolTipService.ToolTip="Settings"
                                 TabIndex="4"
                                 Style="{StaticResource NavigationSettingsButtonStyle}"
                                 Width="{Binding ItemsPanelRoot.Width, ElementName=NavMenuList}"
                                 HorizontalAlignment="{Binding ItemsPanelRoot.HorizontalAlignment, ElementName=NavMenuList}"
-                                Click="SettingsButton_Click"/>
+                                Click="SettingsButton_Click" />
                     </controls:NavMenuListView.Footer>
                 </controls:NavMenuListView>
             </SplitView.Pane>
@@ -107,7 +107,7 @@
                     <TransitionCollection>
                         <NavigationThemeTransition>
                             <NavigationThemeTransition.DefaultNavigationTransitionInfo>
-                                <EntranceNavigationTransitionInfo/>
+                                <EntranceNavigationTransitionInfo />
                             </NavigationThemeTransition.DefaultNavigationTransitionInfo>
                         </NavigationThemeTransition>
                     </TransitionCollection>

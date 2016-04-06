@@ -1,6 +1,8 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using TwitchStreamer.Controls;
+using TwitchStreamer.Views;
 using Windows.Foundation;
 using Windows.Foundation.Metadata;
 using Windows.System;
@@ -9,10 +11,7 @@ using Windows.UI.Xaml;
 using Windows.UI.Xaml.Automation;
 using Windows.UI.Xaml.Controls;
 using Windows.UI.Xaml.Input;
-using Windows.UI.Xaml.Media.Imaging;
 using Windows.UI.Xaml.Navigation;
-using TwitchStreamer.Controls;
-using TwitchStreamer.Views;
 
 namespace TwitchStreamer
 {
@@ -62,7 +61,6 @@ namespace TwitchStreamer
 
             SystemNavigationManager.GetForCurrentView().BackRequested += SystemNavigationManager_BackRequested;
 
-            
             if (ApiInformation.IsTypePresent("Windows.Phone.UI.Input.HardwareButtons"))
             {
                 this.BackButton.Visibility = Visibility.Collapsed;
@@ -75,7 +73,6 @@ namespace TwitchStreamer
 
         private void AppShell_KeyDown(object sender, KeyRoutedEventArgs e)
         {
-            
             FocusNavigationDirection direction = FocusNavigationDirection.None;
             switch (e.Key)
             {
@@ -85,6 +82,7 @@ namespace TwitchStreamer
                 case Windows.System.VirtualKey.NavigationLeft:
                     direction = FocusNavigationDirection.Left;
                     break;
+
                 case Windows.System.VirtualKey.Right:
                 case Windows.System.VirtualKey.GamepadDPadRight:
                 case Windows.System.VirtualKey.GamepadLeftThumbstickRight:
@@ -135,21 +133,17 @@ namespace TwitchStreamer
 
         private void BackRequested(ref bool handled)
         {
-            
-
             if (this.AppFrame == null)
                 return;
 
-            
             if (this.AppFrame.CanGoBack && !handled)
             {
-                
                 handled = true;
                 this.AppFrame.GoBack();
             }
         }
 
-        #endregion
+        #endregion BackRequested Handlers
 
         #region Settings
 
@@ -161,11 +155,10 @@ namespace TwitchStreamer
             }
         }
 
-        #endregion
+        #endregion Settings
 
         #region Navigation
 
-        
         private async void NavMenuList_ItemInvoked(object sender, ListViewItem listViewItem)
         {
             var item = (NavMenuItem)((NavMenuListView)sender).ItemFromContainer(listViewItem);
@@ -175,7 +168,7 @@ namespace TwitchStreamer
                 if (item.DestinationPage != null)
                 {
                     if (item.DestinationPage == typeof(Uri))
-                    {                        
+                    {
                         Uri url = null;
                         if (Uri.TryCreate(item.Arguments as string, UriKind.Absolute, out url))
                         {
@@ -190,7 +183,6 @@ namespace TwitchStreamer
             }
         }
 
-        
         private void OnNavigatingToPage(object sender, NavigatingCancelEventArgs e)
         {
             if (e.NavigationMode == NavigationMode.Back)
@@ -198,7 +190,6 @@ namespace TwitchStreamer
                 var item = (from p in this.navlist where p.DestinationPage == e.SourcePageType select p).SingleOrDefault();
                 if (item == null && this.AppFrame.BackStackDepth > 0)
                 {
-                   
                     foreach (var entry in this.AppFrame.BackStack.Reverse())
                     {
                         item = (from p in this.navlist where p.DestinationPage == entry.SourcePageType select p).SingleOrDefault();
@@ -209,7 +200,6 @@ namespace TwitchStreamer
 
                 var container = (ListViewItem)NavMenuList.ContainerFromItem(item);
 
-               
                 if (container != null) container.IsTabStop = false;
                 NavMenuList.SetSelectedItem(container);
                 if (container != null) container.IsTabStop = true;
@@ -218,7 +208,6 @@ namespace TwitchStreamer
 
         private void OnNavigatedToPage(object sender, NavigationEventArgs e)
         {
-            
             if (e.Content is Page && e.Content != null)
             {
                 var control = (Page)e.Content;
@@ -233,7 +222,7 @@ namespace TwitchStreamer
             this.CheckTogglePaneButtonSizeChanged();
         }
 
-        #endregion
+        #endregion Navigation
 
         public Rect TogglePaneButtonRect
         {
@@ -243,13 +232,11 @@ namespace TwitchStreamer
 
         public event TypedEventHandler<AppShell, Rect> TogglePaneButtonRectChanged;
 
-        
         private void TogglePaneButton_Checked(object sender, RoutedEventArgs e)
         {
             this.CheckTogglePaneButtonSizeChanged();
         }
 
-        
         private void CheckTogglePaneButtonSizeChanged()
         {
             if (this.RootSplitView.DisplayMode == SplitViewDisplayMode.Inline ||
@@ -272,7 +259,6 @@ namespace TwitchStreamer
             }
         }
 
-        
         private void NavMenuItemContainerContentChanging(ListViewBase sender, ContainerContentChangingEventArgs args)
         {
             if (!args.InRecycleQueue && args.Item != null && args.Item is NavMenuItem)
