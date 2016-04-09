@@ -13,6 +13,7 @@ namespace TwitchStreamer.Views
         public string displayName { get; set; }
         public ImageSource preview { get; set; }
         public int viewers { get; set; }
+        public Uri m3uLink { get; set; }
     }
 
 

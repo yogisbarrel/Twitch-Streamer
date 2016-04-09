@@ -12,7 +12,7 @@ using Windows.UI.Xaml.Automation;
 using Windows.UI.Xaml.Resources;
 using Windows.UI.Xaml.Navigation;
 using System.Linq;
-using TwitchStreamers.Views;
+
 namespace TwitchStreamer.Views
 {
     /// <summary>
@@ -20,24 +20,40 @@ namespace TwitchStreamer.Views
     /// </summary>
     public sealed partial class Channels : Page
     {
+        private string tokenAPI = "http://api.twitch.tv/api/channels/{0}/access_token";
         public string gameTemp;
+        public string m3URL = "http://usher.twitch.tv/api/channel/hls/{0}.m3u8?player=twitchweb&token={1}&sig={2}&allow_audio_only=true&allow_source=true&type=any";
         private List<ChanStrim> strims = new List<ChanStrim>();
         private RootObject root = new RootObject();
+        private AccessToken toke = new AccessToken();
         private List<ChanStrim> chanLs = new List<ChanStrim>();
+
         public Channels()
         {
             this.InitializeComponent();
         }
 
+        public async Task<Uri> getm3URL(string channel)
+        {
+            Uri token = new Uri(string.Format(tokenAPI, channel));
+            string test;
+            test = await webRequest(token);
+            toke = JsonConvert.DeserializeObject<AccessToken>(test);
+            string[] args = {channel, toke.token, toke.sig};
+            string.Format(m3URL, args);
+            return new Uri(m3URL);
+        }
         public void strimView(List<ChanStrim> temp)
         {
             streamView.ItemsSource = temp;
             //streamView.UpdateLayout();
         }
+
         async public Task<RootObject> runStreamTiles(string game)
         {
             Uri api = new Uri("https://api.twitch.tv/kraken/streams?game="+game);
             string test;
+            //test = await webRequest(api);
             using (var httpClient = new HttpClient())
             {
                 var response = await httpClient.GetAsync(api);
@@ -49,11 +65,22 @@ namespace TwitchStreamer.Views
             return root;
         }
 
+        async public Task<string> webRequest(Uri conn)
+        {
+            string test;
+            using (var httpClient = new HttpClient())
+            {
+                var response = await httpClient.GetAsync(conn);
+                response.EnsureSuccessStatusCode();
+                test = await response.Content.ReadAsStringAsync();
+            }
+            return test;
+        }
+
         private ImageBrush convert(string link)
         {
             try
             {
-
                 ImageBrush img = new ImageBrush();
                 var source = new BitmapImage();
                 source.UriSource = new Uri(link);
@@ -74,18 +101,8 @@ namespace TwitchStreamer.Views
             //gameTemp = e.Parameter.ToString();
 
             RootObject chan = await runStreamTiles(gameTemp);
-            foreach (var tep in chan.streams)
-            {
-                var t = new ChanStrim
-                {
-                    name = tep.channel.name,
-                    displayName = tep.channel.display_name,
-                    viewers = tep.viewers,
-                    preview = convert(tep.preview.medium).ImageSource,
-                };
-                chanLs.Add(t);
 
-            }
+            //populateChannels(chan);
             //streamView.UpdateLayout();
             streamView.ItemsSource = chanLs;
             streamView.UpdateLayout();
@@ -101,6 +118,22 @@ namespace TwitchStreamer.Views
             if (container != null) container.IsTabStop = true;
         }
 
+        async private void populateChannels(RootObject channels)
+        {
+            foreach(var channel in channels.streams)
+            {
+                var tile = new ChanStrim
+                {
+                    name = channel.channel.name,
+                    displayName = channel.channel.display_name,
+                    viewers = channel.viewers,
+                    preview = convert(channel.preview.medium).ImageSource,
+                    m3uLink = await getm3URL(channel.channel.name)
+                };
+                chanLs.Add(tile);
+            }
+        }
+
         private void Page_Loaded(object sender, RoutedEventArgs e)
         {
             //((Page)sender).Focus(FocusState.Programmatic);
@@ -109,15 +142,14 @@ namespace TwitchStreamer.Views
         protected override void OnNavigatedTo(NavigationEventArgs e)
         {
             base.OnNavigatedTo(e);
-            gameTemp = e.Parameter.ToString();
-           
+            gameTemp = e.Parameter.ToString();           
         }
 
         private void streamView_ItemClick(object sender, ItemClickEventArgs e)
         {
             var item = (ChanStrim)e.ClickedItem;
             
-            AppShell.Current.AppFrame.Navigate(typeof(NowPlaying), item.name);
+            AppShell.Current.AppFrame.Navigate(typeof(NowPlaying), item.m3uLink);
         }
 
         private void OnNavigatingToPage(object sender, NavigatingCancelEventArgs e)
@@ -229,6 +261,13 @@ namespace TwitchStreamer.Views
     {
         public List<Stream> streams { get; set; }
         public int _total { get; set; }
-        public Dictionary<string, string> _links { get; set; }
+        public Dictionary<string, string> _links { get; set; }        
+    }
+
+    public class AccessToken
+    {
+        public string token { get; set; }
+        public string sig { get; set; }
+        public bool mobile_restricted { get; set; }
     }
 }

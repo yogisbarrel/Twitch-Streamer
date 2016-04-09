@@ -34,10 +34,10 @@ namespace TwitchStreamer.Views
         public NowPlaying()
         {
             this.InitializeComponent();
-            this.Loading += (sender, args) =>
-            {
-                initChatStream();
-            };
+            //this.Loading += (sender, args) =>
+            //{
+            //    //initChatStream();
+            //};
 
             this.Loaded += (sender, args) =>
             {
@@ -66,37 +66,12 @@ namespace TwitchStreamer.Views
         }
         private void createURI(string temp)
         {
-            string streamURL = string.Empty;
-            streamURL = "http:\\player.twitch.tv/?channel=pianoimproman";
-            twitch += temp;
-            html.Append("<!DOCTYPE html>").AppendLine();
-            html.Append("<html lang='en' xmlns='http://www.w3.org/1999/xhtml'>").AppendLine();
-            html.Append("<head>").AppendLine();
-            html.Append("<meta charset='utf - 8' />").AppendLine();
-            html.Append("<title></title>").AppendLine();
-            html.Append("</head>").AppendLine();
-            html.Append("<body>").AppendLine();
-            html.Append("<iframe").AppendLine();
-            html.Append("src='http:\\player.twitch.tv/?channel={grandgrant}'").AppendLine();
-            //html.Append(streamURL);
-            //html.Append("'");
-            html.Append("height = '720'").AppendLine();
-            html.Append("width = '1280'").AppendLine();
-            html.Append("frameborder = '0'").AppendLine();
-            html.Append("scrolling='no'").AppendLine();
-            html.Append("allowfullscreen>").AppendLine();
-            html.Append("</iframe>").AppendLine();
-            html.Append("</body>").AppendLine();
-            html.Append("</html>").AppendLine();
-
-
-            //source = new Uri(twitch);
+            
         }
         
         private void startStream()
         {
-            sView.NavigateToString(html.ToString());   
-            //sView.Source = source;         
+            mediaElement.Play();         
         }
         private void startChat()
         {
@@ -135,13 +110,9 @@ namespace TwitchStreamer.Views
             return true;
         }
         protected override void OnNavigatedTo(NavigationEventArgs e)
-        {
-            
-            //base.OnNavigatedTo(e);
-           // var t = e.Parameter.ToString();
-            //createURI(t);
-            //getChatURi(t);
-            
+        {            
+            base.OnNavigatedTo(e);
+            mediaElement.Source = new Uri(e.Parameter.ToString());
         }
 
         //public void runStream()

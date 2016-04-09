@@ -27,25 +27,19 @@ namespace TwitchStreamer.Views
         private List<ChanStrim> chanLs = new List<ChanStrim>();
         public Games()
         {
-            //parseGames();
-            //parseGames()
-            this.InitializeComponent();      
-
-            
+            this.InitializeComponent();           
         }
         private void gameTiles()
-        {
-            
-           
+        {           
             var f = deser.top.Select(item => new GameSection()
             {
                 game = item.game.name,
                 viewers = item.viewers,
                 gameImage = convert(item.game.box.large).ImageSource,
             }).ToList();
+
             gridList.AddRange(f);
-            gameView.ItemsSource = gridList;
-           
+            gameView.ItemsSource = gridList;           
         }
         //private async Task parseGames()
         //{
@@ -69,8 +63,6 @@ namespace TwitchStreamer.Views
             }
 
             deser = JsonConvert.DeserializeObject<GamesInfo.RootObject>(test);
-
-
             return deser;
         }
 
@@ -105,8 +97,7 @@ namespace TwitchStreamer.Views
         private void gameView_ItemClick(object sender, ItemClickEventArgs e)
         {
             var item = (GameSection)e.ClickedItem;
-            AppShell.Current.AppFrame.Navigate(typeof(Channels), item.game);
-            
+            AppShell.Current.AppFrame.Navigate(typeof(Channels), item.game);            
         }
 
         protected override void OnNavigatedTo(NavigationEventArgs e)

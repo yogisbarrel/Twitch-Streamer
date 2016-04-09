@@ -19,9 +19,7 @@
         <MediaElement x:Name="mediaElement" HorizontalAlignment="Left" Height="1080" VerticalAlignment="Top" Width="1920" AudioCategory="Media" RealTimePlayback="True"/>
 
 
-        <WebView x:Name="sView" NavigationCompleted="sView_NavigationCompleted" NavigationStarting="sView_NavigationStarting" ScrollViewer.VerticalScrollBarVisibility="Disabled" Margin="0,0,353,68"/>
-        <!--<WebView x:Name="chatView" Source="local:chat" Margin="1572,0,0,68" RenderTransformOrigin="0.5,0.5">-->
-
+        
         <!--<ToggleButton x:Name="chatButton" Content="ToggleButton" HorizontalAlignment="Left" VerticalAlignment="Top" Margin="1518,1017,0,0" Height="53" Click="toggleButton_Click">
             <ToggleButton.Background>
                 <ImageBrush Stretch="Fill"/>
