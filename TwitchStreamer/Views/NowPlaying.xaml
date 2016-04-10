@@ -14,8 +14,21 @@
         </TransitionCollection>
     </Page.Transitions>
     <Grid Background="{ThemeResource ApplicationPageBackgroundThemeBrush}"
+<<<<<<< HEAD
 		EntranceNavigationTransitionInfo.IsTargetElement="True" RequestedTheme="Dark" Width="Auto" Height="Auto">
         
         <WebView x:Name="strimView" ScrollViewer.VerticalScrollBarVisibility="Disabled" ManipulationMode="All" />
+=======
+		EntranceNavigationTransitionInfo.IsTargetElement="True">
+        <MediaElement x:Name="mediaElement" HorizontalAlignment="Left" Height="1080" VerticalAlignment="Top" Width="1920" AudioCategory="Media" RealTimePlayback="True"/>
+
+
+        
+        <!--<ToggleButton x:Name="chatButton" Content="ToggleButton" HorizontalAlignment="Left" VerticalAlignment="Top" Margin="1518,1017,0,0" Height="53" Click="toggleButton_Click">
+            <ToggleButton.Background>
+                <ImageBrush Stretch="Fill"/>
+            </ToggleButton.Background>
+        </ToggleButton>-->
+>>>>>>> origin/master
     </Grid>
 </Page>

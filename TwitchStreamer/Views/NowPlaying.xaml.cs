@@ -18,7 +18,15 @@ namespace TwitchStreamer.Views
         public NowPlaying()
         {
             this.InitializeComponent();
+<<<<<<< HEAD
            
+=======
+            //this.Loading += (sender, args) =>
+            //{
+            //    //initChatStream();
+            //};
+
+>>>>>>> origin/master
             this.Loaded += (sender, args) =>
             {
                 var item = (from p in AppShell.Current.navlist where p.DestinationPage == typeof(NowPlaying) select p).SingleOrDefault();
@@ -37,7 +45,21 @@ namespace TwitchStreamer.Views
         /// <param name="temp">The temporary.</param>
         private void createURI(string temp)
         {
+<<<<<<< HEAD
             iframe = string.Format("http://player.twitch.tv/?channel={0}", temp);
+=======
+            
+        }
+        
+        private void startStream()
+        {
+            mediaElement.Play();         
+        }
+        private void startChat()
+        {
+            //chatView.Navigate(chat);
+            //chatView.Source = chat;
+>>>>>>> origin/master
         }
 
         /// <summary>
@@ -45,11 +67,17 @@ namespace TwitchStreamer.Views
         /// </summary>
         /// <param name="e">The <see cref="NavigationEventArgs"/> instance containing the event data.</param>
         protected override void OnNavigatedTo(NavigationEventArgs e)
+<<<<<<< HEAD
         {
             base.OnNavigatedTo(e);
             var t = e.Parameter.ToString();
             createURI(t);
             strimView.Source = new Uri(iframe);
+=======
+        {            
+            base.OnNavigatedTo(e);
+            mediaElement.Source = new Uri(e.Parameter.ToString());
+>>>>>>> origin/master
         }
 
         /// <summary>
