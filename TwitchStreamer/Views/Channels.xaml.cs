@@ -15,9 +15,11 @@ namespace TwitchStreamer.Views
 {
     public sealed partial class Channels : Page
     {
-        public string gameTemp;
-        private List<ChanStrim> strims = new List<ChanStrim>();
-        private RootObject root = new RootObject();
+        // holds the name of the game passed from the selected tile
+        // in the games page
+        private string gameTemp;
+        
+        // temporary list to hold the channel information
         private List<ChanStrim> chanLs = new List<ChanStrim>();
 
         /// <summary>
@@ -29,7 +31,7 @@ namespace TwitchStreamer.Views
         }
 
         /// <summary>
-        /// Strims the view.
+        /// Adds the List of channel objects to the grid view control.
         /// </summary>
         /// <param name="temp">The temporary.</param>
         public void strimView(List<ChanStrim> temp)
@@ -38,21 +40,31 @@ namespace TwitchStreamer.Views
         }
 
         /// <summary>
-        /// Runs the stream tiles.
+        /// Gets the stream tiles.
         /// </summary>
         /// <param name="game">The game.</param>
         /// <returns></returns>
-        async public Task<RootObject> runStreamTiles(string game)
+        async public Task<RootObject> getStreamTiles(string game)
         {
+            // Uri for connecting to the twitch.tv API 
             Uri api = new Uri("https://api.twitch.tv/kraken/streams?game=" + game);
-            string test;
+            // Container for the data returned by the API call
+            RootObject root = new RootObject();
+            // string to contain the JSON object array returned by the API call
+            string channels;
+            // API call
             using (var httpClient = new HttpClient())
             {
                 var response = await httpClient.GetAsync(api);
                 response.EnsureSuccessStatusCode();
-                test = await response.Content.ReadAsStringAsync();
+                if (response.IsSuccessStatusCode == false)
+                    load = false;
+                else if (response.IsSuccessStatusCode == true)
+                    load = true;
+                channels = await response.Content.ReadAsStringAsync();
             }
-            root = JsonConvert.DeserializeObject<RootObject>(test);
+            // Populate root with the data in the JSON array
+            root = JsonConvert.DeserializeObject<RootObject>(channels);
 
             return root;
         }
@@ -84,9 +96,12 @@ namespace TwitchStreamer.Views
         /// </summary>
         /// <param name="sender">The sender.</param>
         /// <param name="args">The arguments.</param>
-        async private void Page_Loading(FrameworkElement sender, object args)
+        private async void Page_Loading(FrameworkElement sender, object args)
         {
-            RootObject chan = await runStreamTiles(gameTemp);
+            // Container for the data returned by the API call 
+            RootObject chan = await getStreamTiles(gameTemp);
+            
+            // populate the list of channels
             foreach (var tep in chan.streams)
             {
                 var t = new ChanStrim
@@ -96,15 +111,18 @@ namespace TwitchStreamer.Views
                     viewers = tep.viewers,
                     preview = convert(tep.preview.medium).ImageSource,
                 };
+                // add to channel list
                 chanLs.Add(t);
             }
-
+            
+            // Add the channel list to the gridview
             streamView.ItemsSource = chanLs;
             streamView.UpdateLayout();
+            // Ensure the UI menu (left flyout menu) has the channels page highlighted
             var item = (from p in AppShell.Current.navlist where p.DestinationPage == typeof(Channels) select p).SingleOrDefault();
-
+            // 
             var container = (ListViewItem)AppShell.Current.NavMenuList.ContainerFromItem(item);
-
+            //
             if (container != null) container.IsTabStop = false;
             AppShell.Current.NavMenuList.SetSelectedItem(container);
             if (container != null) container.IsTabStop = true;
@@ -117,6 +135,7 @@ namespace TwitchStreamer.Views
         protected override void OnNavigatedTo(NavigationEventArgs e)
         {
             base.OnNavigatedTo(e);
+            // retrieve the game name from the tile selected on the games page
             gameTemp = e.Parameter.ToString();
         }
 
@@ -127,6 +146,10 @@ namespace TwitchStreamer.Views
         /// <param name="e">The <see cref="ItemClickEventArgs"/> instance containing the event data.</param>
         private void streamView_ItemClick(object sender, ItemClickEventArgs e)
         {
+            // this doesnt do anything
+            // leaving it in out of fear, Visual Studio compiler 
+            // gets grumpy when you remove generated events
+            //
             var item = (ChanStrim)e.ClickedItem;
         }
 
@@ -137,6 +160,7 @@ namespace TwitchStreamer.Views
         /// <param name="e">The <see cref="NavigatingCancelEventArgs"/> instance containing the event data.</param>
         private void OnNavigatingToPage(object sender, NavigatingCancelEventArgs e)
         {
+            // updates the backstack for the application pages
             if (e.NavigationMode == NavigationMode.Back)
             {
                 var item = (from p in AppShell.Current.navlist where p.DestinationPage == e.SourcePageType select p).SingleOrDefault();
@@ -159,6 +183,15 @@ namespace TwitchStreamer.Views
         }
     }
 
+    // Classes generated from the JSON object returned by an API call
+    // Essentially a C# representation of the JSON object
+    // I really need to move it to its own file, but have been lazy
+    public class RootObject
+    {
+        public List<Stream> streams { get; set; }
+        public int _total { get; set; }
+        public Dictionary<string, string> _links { get; set; }
+    }
     public class Links
     {
         public string self { get; set; }
@@ -236,10 +269,5 @@ namespace TwitchStreamer.Views
         public string followed { get; set; }
     }
 
-    public class RootObject
-    {
-        public List<Stream> streams { get; set; }
-        public int _total { get; set; }
-        public Dictionary<string, string> _links { get; set; }
-    }
+    
 }

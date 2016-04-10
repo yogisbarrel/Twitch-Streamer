@@ -15,7 +15,7 @@ namespace TwitchStreamer.Views
     {
         private bool load = true;
         private FeatStreams feat = new FeatStreams();
-        private List<FeatStreams> ftr = new List<FeatStreams>();
+        private List<FeatStreams> featured = new List<FeatStreams>();
 
         /// <summary>
         /// Initializes a new instance of the <see cref="Featured"/> class.
@@ -26,7 +26,7 @@ namespace TwitchStreamer.Views
 
             this.Loading += (sender, args) =>
             {
-                runStreamTiles();                
+                getFeaturedTiles();                
             };
             this.Loaded += (sender, args) =>
             {
@@ -47,10 +47,12 @@ namespace TwitchStreamer.Views
         /// <summary>
         /// Runs the stream tiles.
         /// </summary>
-        public async void runStreamTiles()
+        public async void getFeaturedTiles()
         {
+            // Uri for connecting to the twitch.tv API 
             Uri api = new Uri("https://api.twitch.tv/kraken/streams/featured");
-            string jsonObject = string.Empty;
+            // Container for the data returned by the API call
+            string streams;
 
             using (var httpClient = new HttpClient())
             {
@@ -60,10 +62,10 @@ namespace TwitchStreamer.Views
                     load = false;
                 else if (response.IsSuccessStatusCode == true)
                     load = true;
-                jsonObject = await response.Content.ReadAsStringAsync();
+                featured = await response.Content.ReadAsStringAsync();
             }
 
-            feat.root = JsonConvert.DeserializeObject<Objects.Featured.RootObject>(jsonObject);            
+            feat.root = JsonConvert.DeserializeObject<Objects.Featured.RootObject>(streams);            
         }
 
         /// <summary>
@@ -80,9 +82,9 @@ namespace TwitchStreamer.Views
                     viewers = tep.stream.viewers,
                     preview = convert(tep.stream.preview.medium).ImageSource,
                 };
-                ftr.Add(t);
+                featured.Add(t);
             }
-            featuredView.ItemsSource = ftr;
+            featuredView.ItemsSource = featured;
             featuredView.UpdateLayout();
         }
         /// <summary>
@@ -148,3 +150,4 @@ namespace TwitchStreamer.Views
         }
     }
 }
+
