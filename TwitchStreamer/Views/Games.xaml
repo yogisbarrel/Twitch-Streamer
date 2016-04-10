@@ -6,7 +6,7 @@
     xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
     x:Class="TwitchStreamer.Views.Games"
-    mc:Ignorable="d"  RequestedTheme="{StaticResource AppDefault}">
+    mc:Ignorable="d"  RequestedTheme="{StaticResource AppDefault}" Loaded="Page_Loaded">
 
     <Grid Background="{ThemeResource ApplicationPageBackgroundThemeBrush}"
 		EntranceNavigationTransitionInfo.IsTargetElement="True">
@@ -15,7 +15,7 @@
 			Width="Auto"
 			Height="Auto"
 			IsItemClickEnabled="True"
-			SelectionMode="None" ItemClick="gameView_ItemClick">
+			SelectionMode="None" ItemClick="gameView_ItemClick" Loading="Page_Loading">
             <GridView.ItemTemplate>
                 <DataTemplate x:DataType="local:GameSection">
                     <Grid HorizontalAlignment="Stretch">

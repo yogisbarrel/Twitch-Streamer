@@ -30,36 +30,22 @@ namespace TwitchStreamer.Views
         /// </summary>
         public Games()
         {
-<<<<<<< HEAD
             this.InitializeComponent();
-=======
-            this.InitializeComponent();           
->>>>>>> origin/master
         }
 
         /// <summary>
         /// Games the tiles.
         /// </summary>
         private void gameTiles()
-<<<<<<< HEAD
         {
             var f = GamesInfo.top.Select(item => new GameSection()
-=======
-        {           
-            var f = deser.top.Select(item => new GameSection()
->>>>>>> origin/master
             {
                 game = item.game.name,
                 viewers = item.viewers,
                 gameImage = convert(item.game.box.large).ImageSource,
             }).ToList();
-
             gridList.AddRange(f);
-<<<<<<< HEAD
             gameView.ItemsSource = gridList;
-=======
-            gameView.ItemsSource = gridList;           
->>>>>>> origin/master
         }
 
         /// <summary>
@@ -76,14 +62,9 @@ namespace TwitchStreamer.Views
                 test = await response.Content.ReadAsStringAsync();
             }
 
-<<<<<<< HEAD
             GamesInfo = JsonConvert.DeserializeObject<Objects.Game.RootObject>(test);
 
             return GamesInfo;
-=======
-            deser = JsonConvert.DeserializeObject<GamesInfo.RootObject>(test);
-            return deser;
->>>>>>> origin/master
         }
 
         /// <summary>
@@ -127,11 +108,7 @@ namespace TwitchStreamer.Views
         private void gameView_ItemClick(object sender, ItemClickEventArgs e)
         {
             var item = (GameSection)e.ClickedItem;
-<<<<<<< HEAD
             AppShell.Current.AppFrame.Navigate(typeof(Channels), item.game);
-=======
-            AppShell.Current.AppFrame.Navigate(typeof(Channels), item.game);            
->>>>>>> origin/master
         }
 
         /// <summary>
